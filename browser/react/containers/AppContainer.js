@@ -8,6 +8,7 @@ import Albums from '../components/Albums.js';
 import Album from '../components/Album';
 import Sidebar from '../components/Sidebar';
 import Player from '../components/Player';
+import Artists from '../components/Artists';
 
 import { convertAlbum, convertAlbums, skip } from '../utils';
 
@@ -23,17 +24,37 @@ export default class AppContainer extends Component {
     this.prev = this.prev.bind(this);
     this.selectAlbum = this.selectAlbum.bind(this);
     this.deselectAlbum = this.deselectAlbum.bind(this);
+    this.selectArtist = this.selectArtist.bind(this); 
   }
 
   componentDidMount () {
     axios.get('/api/albums/')
-      .then(res => res.data)
+      .then(res => {
+        return res.data.splice(0,4); 
+      })
       .then(album => this.onLoad(convertAlbums(album)));
 
     AUDIO.addEventListener('ended', () =>
       this.next());
     AUDIO.addEventListener('timeupdate', () =>
       this.setProgress(AUDIO.currentTime / AUDIO.duration));
+
+    axios.get('/api/artists/')
+      .then(res => {
+        console.log(res); 
+        return res.data.splice(0,4); 
+      })
+      .then(artists => this.setState({artists: artists}))  
+    
+    //   .then(album => this.onLoad(convertAlbums(album)));
+
+    // AUDIO.addEventListener('ended', () =>
+    //   this.next());
+    // AUDIO.addEventListener('timeupdate', () =>
+    //   this.setProgress(AUDIO.currentTime / AUDIO.duration));
+
+
+
   }
 
   onLoad (albums) {
@@ -98,6 +119,22 @@ export default class AppContainer extends Component {
       }));
   }
 
+  // onLoad(artist){
+
+  //   this.setState({selectedArtist:artist})
+  // }
+
+  selectArtist (artistId) {
+    axios.get(`/api/artists/${artistId}`)
+      .then(res => res.data)
+
+      .then(artist => {
+        console.log("arist", artist); 
+        console.log("this", this); 
+        this.setState({selectedArtist: artist }
+          )});
+  }
+
   deselectAlbum () {
     this.setState({ selectedAlbum: {}});
   }
@@ -132,7 +169,11 @@ export default class AppContainer extends Component {
 
                 // Albums (plural) component's props
                 albums: this.state.albums,
-                selectAlbum: this.selectAlbum // note that this.selectAlbum is a method, and this.state.selectedAlbum is the chosen album
+                selectAlbum: this.selectAlbum, 
+                artists: this.state.artists, 
+                artist: this.state.selectedArtist, 
+                selectArtist: this.selectArtist 
+                 // note that this.selectAlbum is a method, and this.state.selectedAlbum is the chosen album
               })
               : null
         }
