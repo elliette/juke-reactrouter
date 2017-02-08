@@ -10,7 +10,7 @@ import Sidebar from '../components/Sidebar';
 import Player from '../components/Player';
 import Artists from '../components/Artists';
 
-import { convertAlbum, convertAlbums, skip } from '../utils';
+import { convertAlbum, convertAlbums, skip, convertArtist} from '../utils';
 
 export default class AppContainer extends Component {
 
@@ -131,9 +131,18 @@ export default class AppContainer extends Component {
       .then(artist => {
         console.log("arist", artist); 
         console.log("this", this); 
-        this.setState({selectedArtist: artist }
-          )});
+        this.setState({selectedArtist: artist}
+          )})
   }
+
+
+  getAlbumsByArtistId (artistId){
+    axios.get(`/api/artists/${artistId}/albums`)
+      .then(res =>res.data)
+      .then(albums => this.setState({artistAlbums: albums})) 
+  }
+
+
 
   deselectAlbum () {
     this.setState({ selectedAlbum: {}});
@@ -172,7 +181,9 @@ export default class AppContainer extends Component {
                 selectAlbum: this.selectAlbum, 
                 artists: this.state.artists, 
                 artist: this.state.selectedArtist, 
-                selectArtist: this.selectArtist 
+                selectArtist: this.selectArtist, 
+                artistAlbums: this.state.artistAlbums, 
+            
                  // note that this.selectAlbum is a method, and this.state.selectedAlbum is the chosen album
               })
               : null

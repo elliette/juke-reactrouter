@@ -9,20 +9,21 @@ export const convertAlbum = (album) => {
   return album;
 };
 
-// export const convertArtist = (artist) => {
+export const convertArtist = (artist) => {
 
-//   artist.albums = artist.getAlbums();  
-//   console.log(artist.albums); 
-//   // artist.songs = artist.albums.map(function(album){
-//   //     var songs = album.songs; 
-//   //     songs.filter(function(song){
-//   //       return song.artists 
-//   //     })
-//   // }
-//   // artist.imageUrl = `/api/albums/${album.id}/image`;
-//   // album.songs = album.songs.map(convertSong);
-//   // return album;
-// };
+  artist.albums = artist.getAlbums();  
+  console.log(artist.albums); 
+  return artist; 
+  // artist.songs = artist.albums.map(function(album){
+  //     var songs = album.songs; 
+  //     songs.filter(function(song){
+  //       return song.artists 
+  //     })
+  // }
+  // artist.imageUrl = `/api/albums/${album.id}/image`;
+  // album.songs = album.songs.map(convertSong);
+  // return album;
+};
 
 
 
